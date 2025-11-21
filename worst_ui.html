@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Upvision - The Inescapable Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: white;
+            padding: 50px;
+            padding-top: 60px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 3px solid #667eea;
+        }
+
+        .question-text {
+            font-size: 1.5em;
+            color: #2d3436;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .btn {
+            padding: 20px 40px;
+            font-size: 1.3em;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .btn-yes {
+            background: #00b894;
+            color: white;
+            font-size: 2em;
+            padding: 25px 60px;
+            box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4);
+        }
+
+        .btn-yes:hover {
+            background: #00a383;
+            transform: scale(1.1);
+        }
+
+        .btn-no {
+            background: #dfe6e9;
+            color: #636e72;
+            font-size: 0.8em;
+            padding: 10px 20px;
+        }
+
+        .btn-no:hover {
+            transform: scale(0.95);
+        }
+
+        .message-box {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid #ffc107;
+            font-size: 1.1em;
+            color: #856404;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .attempts-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff7675;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+
+        /* Password Screen Styles */
+        .password-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 3px solid #667eea;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 3px solid #dfe6e9;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            text-align: left;
+        }
+
+        .quiz-option:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            transform: translateX(10px);
+        }
+
+        .quiz-option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .quiz-option.wrong {
+            background: #ff7675;
+            color: white;
+            border-color: #d63031;
+            animation: shake 0.5s;
+        }
+
+        .quiz-prompt {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 2px solid #ffc107;
+            font-size: 1.2em;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        .btn-submit {
+            background: #667eea;
+            color: white;
+            padding: 18px 50px;
+            font-size: 1.3em;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+
+        .btn-submit:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 2px solid #ef5350;
+            font-weight: bold;
+        }
+
+        .fake-cancel {
+            background: #95a5a6;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .fake-cancel:hover {
+            background: #7f8c8d;
+        }
+
+        .fake-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            line-height: 1;
+        }
+
+        .fake-close-btn:hover {
+            background: #c0392b;
+            transform: rotate(90deg);
+        }
+
+        .fake-back-btn {
+            position: absolute;
+            top: 70px;
+            left: 15px;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive;
+            transition: all 0.3s ease;
+        }
+
+        .fake-back-btn:hover {
+            background: #2980b9;
+        }
+
+        .fake-back-btn::before {
+            content: "← ";
+        }
+
+        .fake-exit-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #2c3e50;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .fake-exit-bar .window-title {
+            color: white;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .fake-exit-bar .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .window-btn.close { background: #ff5f56; }
+        .window-btn.minimize { background: #ffbd2e; }
+        .window-btn.maximize { background: #27c93f; }
+
+        /* Final Screen */
+        .member-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .member-id {
+            font-size: 2.5em;
+            margin: 20px 0;
+            letter-spacing: 3px;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f39c12;
+            animation: confetti-fall 3s linear;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .loading-screen {
+            background: #2d3436;
+            color: white;
+            padding: 50px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 8px solid #34495e;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Fake Window Controls -->
+        <div class="fake-exit-bar">
+            <div class="window-title">Join Upvision - Registration Form</div>
+            <div class="window-controls">
+                <button class="window-btn close" onclick="fakeClose()"></button>
+                <button class="window-btn minimize" onclick="fakeMinimize()"></button>
+                <button class="window-btn maximize" onclick="fakeMaximize()"></button>
+            </div>
+        </div>
+
+        <!-- Fake Close Button (X) -->
+        <button class="fake-close-btn" onclick="fakeCloseX()">×</button>
+
+        <!-- Fake Back Button -->
+        <button class="fake-back-btn" onclick="fakeBack()">Back</button>
+
+        <div class="attempts-counter">
+            Escape Attempts: <span id="attempts">0</span>
+        </div>
+
+        <!-- Screen 1: Initial Question -->
+        <div id="screen1" class="screen active">
+            <h1>🚀 Join Upvision Tech Club!</h1>
+            <p class="subtitle">NITD's Most Exclusive Tech Community</p>
+
+            <div class="question">
+                <div class="question-text" id="questionText">
+                    Would you like to join Upvision?
+                </div>
+                <p style="font-size: 0.9em; color: #666; font-style: italic; margin-top: 10px;">
+                    (Gufran bhaiya ne bola karne ka matlab join karne ka)
+                </p>
+
+                <div class="button-container" id="buttonContainer">
+                    <button class="btn btn-yes" onclick="clickYes()">
+                        YES! ABSOLUTELY! 🎉
+                    </button>
+                    <button class="btn btn-no" id="noBtn" onclick="clickNo()">
+                        No thanks
+                    </button>
+                </div>
+
+                <button class="fake-cancel" onclick="fakeCancel()" style="margin-top: 20px;">Cancel Registration</button>
+            </div>
+
+            <div class="message-box" id="messageBox">
+                We're so excited to have you! Just click YES! 😊
+            </div>
+        </div>
+
+        <!-- Screen 2: Personality Quiz -->
+        <div id="screen2" class="screen">
+            <h1>🎯 Quick Personality Quiz!</h1>
+            <p class="subtitle">Help us understand you better! (Mandatory)</p>
+
+            <div class="password-container">
+                <div class="question-text" style="font-size: 1.3em; margin-bottom: 25px;">
+                    Question <span id="quizQuestion">1</span> of 5
+                </div>
+
+                <div id="quizContent">
+                    <!-- Quiz questions will be dynamically inserted here -->
+                </div>
+
+                <div id="quizError"></div>
+
+                <button class="fake-cancel" onclick="skipQuiz()" style="margin-top: 20px;">Skip Quiz</button>
+
+                <div style="margin-top: 25px;">
+                    <div style="background: #e8f4f8; padding: 15px; border-radius: 10px; border: 2px solid #3498db;">
+                        <strong>⏱️ Time Remaining:</strong> <span id="quizTimer" style="font-size: 1.2em; color: #e74c3c;">10</span> seconds
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 3: Fake Loading -->
+        <div id="screen3" class="screen">
+            <div class="loading-screen">
+                <h1>⏳ Processing Your Registration...</h1>
+                <div class="spinner"></div>
+                <p id="loadingText">Initializing...</p>
+            </div>
+        </div>
+
+        <!-- Screen 4: Final Welcome -->
+        <div id="screen4" class="screen">
+            <h1>🎊 WELCOME TO UPVISION! 🎊</h1>
+            
+            <div class="member-card">
+                <h2>🏆 Official Member Card</h2>
+                <div class="member-id">MEMBER #<span id="memberId"></span></div>
+                <p style="font-size: 1.2em; margin: 20px 0;">Congratulations! You are now part of NITD's finest!</p>
+                <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
+                    (PS: There was never really a way out, but we appreciate your persistence 😉)
+                </p>
+                <p style="margin-top: 15px; font-size: 0.85em;">
+                    Total Escape Attempts: <span id="finalAttempts"></span><br>
+                    Time Wasted: <span id="timeSpent"></span>
+                </p>
+            </div>
+
+            <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 15px; border: 2px solid #667eea;">
+                <p style="color: #667eea; font-weight: bold; font-size: 1.1em; margin: 0;">
+                    Designed by ANAS from CSE 1
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let attempts = 0;
+        let noClickCount = 0;
+        let startTime = Date.now();
+        const noButton = document.getElementById('noBtn');
+        const questionText = document.getElementById('questionText');
+        const messageBox = document.getElementById('messageBox');
+        const buttonContainer = document.getElementById('buttonContainer');
+
+        const noMessages = [
+            "Are you sure? Upvision is AMAZING! 🌟",
+            "Think about all the hackathons and workshops! 🎮",
+            "Your friends are already joining! 👥",
+            "We have free snacks at every meeting! 🍕",
+            "You're breaking our hearts... 💔",
+            "NITD's best minds are in Upvision! 🧠",
+            "The 'No' button is getting tired... 😴",
+            "Okay fine, one more chance! 🎯",
+            "This is getting awkward... 😅",
+            "You know resistance is futile! 😏"
+        ];
+
+        const noQuestions = [
+            "Would you like to join Upvision?",
+            "Are you REALLY sure you don't want to join?",
+            "How about NOW? Will you join?",
+            "What if we said PLEASE? 🙏",
+            "Can we tempt you with tech talks? 💻",
+            "Everyone's joining. Why not you? 🤔",
+            "Your future self wants you to join! ⏰",
+            "One more try... Join us? 🚀",
+            "NITD needs you in Upvision! 🏛️",
+            "FINAL OFFER: Join Upvision? 💎"
+        ];
+
+        function updateAttempts() {
+            attempts++;
+            document.getElementById('attempts').textContent = attempts;
+        }
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function clickNo() {
+            updateAttempts();
+            noClickCount++;
+
+            const currentSize = parseFloat(window.getComputedStyle(noButton).fontSize);
+            noButton.style.fontSize = (currentSize * 0.85) + 'px';
+            noButton.style.padding = (parseInt(window.getComputedStyle(noButton).paddingTop) * 0.85) + 'px ' + 
+                                     (parseInt(window.getComputedStyle(noButton).paddingLeft) * 0.85) + 'px';
+
+            const randomX = Math.random() * 100 - 50;
+            const randomY = Math.random() * 100 - 50;
+            noButton.style.transform = `translate(${randomX}px, ${randomY}px)`;
+
+            document.querySelector('.container').classList.add('shake');
+            setTimeout(() => document.querySelector('.container').classList.remove('shake'), 500);
+
+            if (noClickCount < noMessages.length) {
+                messageBox.textContent = noMessages[noClickCount - 1];
+                questionText.textContent = noQuestions[Math.min(noClickCount - 1, noQuestions.length - 1)];
+            }
+
+            if (noClickCount === 5) {
+                noButton.style.opacity = '0.5';
+                messageBox.textContent = "The 'No' button is fading into the void... 👻";
+            }
+
+            if (noClickCount === 7) {
+                noButton.style.display = 'none';
+                messageBox.textContent = "Oops! The 'No' button has left the building! 🏃‍♂️";
+                questionText.textContent = "Looks like you're joining Upvision! Let's continue! 🎯";
+                
+                setTimeout(() => {
+                    clickYes();
+                }, 2000);
+            }
+
+            if (noClickCount === 3 || noClickCount === 5) {
+                addExtraYesButton();
+            }
+        }
+
+        function addExtraYesButton() {
+            const newYesBtn = document.createElement('button');
+            newYesBtn.className = 'btn btn-yes';
+            newYesBtn.textContent = ['YES! 🎊', 'JOIN NOW! ✨', 'COUNT ME IN! 🚀'][Math.floor(Math.random() * 3)];
+            newYesBtn.onclick = clickYes;
+            newYesBtn.style.animation = 'fadeIn 0.5s';
+            buttonContainer.appendChild(newYesBtn);
+        }
+
+        function clickYes() {
+            switchScreen('screen2');
+            startQuiz();
+        }
+
+        // Personality Quiz
+        let currentQuizQuestion = 0;
+        let quizTimer;
+        let quizTimeLeft = 10;
+
+        const quizQuestions = [
+            {
+                prompt: "What's your ideal weekend activity?",
+                options: [
+                    "Coding a new project 💻",
+                    "Attending tech workshops 🎓",
+                    "Learning new frameworks 📚",
+                    "Joining Upvision events 🚀"
+                ],
+                correctIndex: 3
+            },
+            {
+                prompt: "How do you solve problems?",
+                options: [
+                    "Google it 🔍",
+                    "Ask Upvision members 🤝",
+                    "Try and fail 💥",
+                    "Read documentation 📖"
+                ],
+                correctIndex: 1
+            },
+            {
+                prompt: "What motivates you most?",
+                options: [
+                    "Money 💰",
+                    "Fame 🌟",
+                    "Learning 📚",
+                    "Being in Upvision 🎯"
+                ],
+                correctIndex: 3
+            },
+            {
+                prompt: "Pick your favorite tech stack:",
+                options: [
+                    "MERN Stack 🟢",
+                    "Django + React ⚡",
+                    "Whatever Upvision uses 💜",
+                    "WordPress 🌐"
+                ],
+                correctIndex: 2
+            },
+            {
+                prompt: "Complete this sentence: 'The best tech club is...'",
+                options: [
+                    "Upvision 🎊",
+                    "Also Upvision ✨",
+                    "Obviously Upvision 🚀",
+                    "Did I mention Upvision? 💎"
+                ],
+                correctIndex: 0  // All are correct!
+            }
+        ];
+
+        function startQuiz() {
+            currentQuizQuestion = 0;
+            showQuizQuestion();
+        }
+
+        function showQuizQuestion() {
+            const question = quizQuestions[currentQuizQuestion];
+            document.getElementById('quizQuestion').textContent = currentQuizQuestion + 1;
+            
+            const content = document.getElementById('quizContent');
+            content.innerHTML = `
+                <div class="quiz-prompt">${question.prompt}</div>
+                ${question.options.map((opt, index) => `
+                    <div class="quiz-option" onclick="selectQuizOption(${index})" id="option${index}">
+                        ${String.fromCharCode(65 + index)}. ${opt}
+                    </div>
+                `).join('')}
+            `;
+
+            // Start countdown timer
+            quizTimeLeft = 10;
+            document.getElementById('quizTimer').textContent = quizTimeLeft;
+            
+            if (quizTimer) clearInterval(quizTimer);
+            quizTimer = setInterval(() => {
+                quizTimeLeft--;
+                document.getElementById('quizTimer').textContent = quizTimeLeft;
+                
+                if (quizTimeLeft <= 0) {
+                    clearInterval(quizTimer);
+                    handleQuizTimeout();
+                }
+            }, 1000);
+        }
+
+        function selectQuizOption(selectedIndex) {
+            updateAttempts();
+            const question = quizQuestions[currentQuizQuestion];
+            const errorDiv = document.getElementById('quizError');
+            
+            // Clear timer
+            clearInterval(quizTimer);
+
+            // Wrong answer responses
+            const wrongAnswers = [
+                "❌ Wrong! Try again... this time choose Upvision! 😉",
+                "❌ Incorrect! Hint: The answer involves Upvision 💡",
+                "❌ Nope! When in doubt, choose Upvision! 🎯",
+                "❌ Almost! But the correct answer is always Upvision! 🚀",
+                "❌ Try again! (Hint: 🟣 Upvision 🟣)",
+                "❌ So close! Pick the Upvision option! 💜"
+            ];
+
+            if (selectedIndex !== question.correctIndex && currentQuizQuestion !== 4) {
+                // Mark as wrong
+                document.getElementById(`option${selectedIndex}`).classList.add('wrong');
+                errorDiv.innerHTML = `<div class="error-message">${wrongAnswers[attempts % wrongAnswers.length]}</div>`;
+                
+                document.querySelector('.container').classList.add('shake');
+                setTimeout(() => {
+                    document.querySelector('.container').classList.remove('shake');
+                    document.getElementById(`option${selectedIndex}`).classList.remove('wrong');
+                    showQuizQuestion(); // Restart same question
+                }, 1500);
+            } else {
+                // Correct answer
+                document.getElementById(`option${selectedIndex}`).classList.add('selected');
+                errorDiv.innerHTML = '<div class="message success">✅ Correct! See? You belong in Upvision! 🎉</div>';
+                
+                setTimeout(() => {
+                    currentQuizQuestion++;
+                    errorDiv.innerHTML = '';
+                    
+                    if (currentQuizQuestion >= quizQuestions.length) {
+                        // Quiz complete
+                        showQuizResults();
+                    } else {
+                        showQuizQuestion();
+                    }
+                }, 1500);
+            }
+        }
+
+        function handleQuizTimeout() {
+            updateAttempts();
+            const errorDiv = document.getElementById('quizError');
+            errorDiv.innerHTML = '<div class="error-message">⏰ Time\'s up! Starting over... (This time, answer faster!) 😅</div>';
+            
+            setTimeout(() => {
+                errorDiv.innerHTML = '';
+                showQuizQuestion();
+            }, 2000);
+        }
+
+        function showQuizResults() {
+            const content = document.getElementById('quizContent');
+            content.innerHTML = `
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 15px; text-align: center;">
+                    <h2 style="font-size: 2em; margin-bottom: 20px;">🎊 Quiz Results 🎊</h2>
+                    <div style="font-size: 3em; margin: 20px 0;">100%</div>
+                    <h3 style="font-size: 1.8em; margin: 20px 0;">Your Personality Type:</h3>
+                    <div style="font-size: 2.5em; margin: 20px 0; font-weight: bold;">🚀 UPVISION MEMBER 🚀</div>
+                    <p style="font-size: 1.2em; margin-top: 20px; opacity: 0.9;">
+                        Congratulations! Our advanced AI has determined that you're a perfect fit for Upvision!
+                    </p>
+                    <p style="font-size: 1em; margin-top: 15px; opacity: 0.8;">
+                        (Spoiler: Everyone is! That was the point! 😉)
+                    </p>
+                </div>
+            `;
+            
+            document.getElementById('quizTimer').parentElement.style.display = 'none';
+            document.getElementById('quizError').innerHTML = '';
+
+            setTimeout(() => {
+                showLoading();
+            }, 4000);
+        }
+
+        function showLoading() {
+            switchScreen('screen3');
+            
+            const messages = [
+                "Initializing...",
+                "Checking if you can escape... ⏳",
+                "Nope, you can't! 😄",
+                "Creating your profile...",
+                "Assigning member ID...",
+                "Sending welcome email...",
+                "Almost there...",
+                "Just kidding, you're already in! 🎉"
+            ];
+
+            let i = 0;
+            const interval = setInterval(() => {
+                document.getElementById('loadingText').textContent = messages[i];
+                i++;
+                if (i >= messages.length) {
+                    clearInterval(interval);
+                    setTimeout(showFinal, 1000);
+                }
+            }, 1000);
+        }
+
+        function showFinal() {
+            switchScreen('screen4');
+            
+            const memberId = Math.floor(Math.random() * 9000) + 1000;
+            document.getElementById('memberId').textContent = memberId;
+            document.getElementById('finalAttempts').textContent = attempts;
+            
+            const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(timeSpent / 60);
+            const seconds = timeSpent % 60;
+            document.getElementById('timeSpent').textContent = `${minutes}m ${seconds}s`;
+
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => createConfetti(), i * 30);
+            }
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = ['#f39c12', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'][Math.floor(Math.random() * 5)];
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 3000);
+        }
+
+        // Easter eggs
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                updateAttempts();
+                alert('❌ Nice try! But ESC key has also joined Upvision! 😂');
+            }
+        });
+
+        window.addEventListener('beforeunload', (e) => {
+            if (!document.getElementById('screen4').classList.contains('active')) {
+                e.preventDefault();
+                e.returnValue = 'Wait! Upvision will miss you! Are you sure? 😢';
+                return e.returnValue;
+            }
+        });
+
+        // Fake Exit Button Functions
+        function fakeClose() {
+            updateAttempts();
+            alert('❌ Close button disabled! This form must be completed! 😊');
+        }
+
+        function fakeMinimize() {
+            updateAttempts();
+            const container = document.querySelector('.container');
+            container.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                container.style.transform = 'scale(1)';
+                alert('❌ Minimize failed! You cannot escape Upvision! 😄');
+            }, 300);
+        }
+
+        function fakeMaximize() {
+            updateAttempts();
+            const container = document.querySelector('.container');
+            container.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                container.style.transform = 'scale(1)';
+                alert('❌ Maximize successful! Now you can see Upvision even better! 🎉');
+            }, 300);
+        }
+
+        function fakeCloseX() {
+            updateAttempts();
+            const closeBtn = document.querySelector('.fake-close-btn');
+            closeBtn.style.transform = 'rotate(360deg) scale(1.5)';
+            setTimeout(() => {
+                closeBtn.style.transform = 'rotate(0deg) scale(1)';
+                alert('❌ The X button is just for decoration! Please continue! 😉');
+            }, 500);
+        }
+
+        function fakeBack() {
+            updateAttempts();
+            alert('❌ Error 404: Previous page not found! There is no going back! 🚫');
+        }
+
+        function fakeCancel() {
+            updateAttempts();
+            alert('❌ Cancel button is under maintenance! Please use the JOIN button instead! 🔧');
+        }
+
+        function skipQuiz() {
+            updateAttempts();
+            alert('❌ Sorry! This quiz is MANDATORY for personality analysis! No skipping! 📝');
+        }
+    </script>
+</body>
+</html>
